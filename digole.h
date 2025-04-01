@@ -22,6 +22,8 @@ typedef enum {
 	digoleTP,						// Text Position <row,col>
 	digoleTT,						// Text Type <message>
 	digoleTPTT,						// Text Position & Text <row, col, message>
+	digolePF,						// Print Formatted <fmt, ...>
+	digoleTPPF,						// Text Position & Print Formatted <row, col, fmt, ...>
 	digoleNUM,
 } digole_e;
 
@@ -79,18 +81,34 @@ int digoleFunction(digole_e Func, ...);
 /**
  * @brief
  * @param[in]
+ * @return
+ */
+#define digoleText(pccStr)						digoleFunction(digoleTT, pccStr)
+
+/**
+ * @brief
+ * @param[in]
  * @param[in]
  * @param[in]
  * @return
  */
-#define digolePrintAt(Row, Col, pccStr)			digoleFunction(digoleTPTT, Row, Col, pccStr)	
+#define digoleTextAt(Row, Col, pccStr)			digoleFunction(digoleTPTT, Row, Col, pccStr)	
 
 /**
  * @brief
  * @param[in]
  * @return
  */
-#define digolePrint(pccStr)						digoleFunction(digoleTT, pccStr)
+#define digolePrint(Fmt, ...)					digoleFunction(digolePF, Fmt, ##__VA_ARGS__)
+
+/**
+ * @brief
+ * @param[in]
+ * @param[in]
+ * @param[in]
+ * @return
+ */
+#define digolePrintAt(Row, Col, Fmt, ...)		digoleFunction(digoleTPPF, Row, Col, Fmt, ##__VA_ARGS__)	
 
 /**
  * @brief

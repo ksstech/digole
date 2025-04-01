@@ -91,12 +91,20 @@ int digoleFunction(digole_e Func, ...) {
 	int iRV = erSUCCESS;
 	va_list vaList;
 	va_start(vaList, Func);
-	if (INRANGE(digoleTP, Func, digoleTPTT)) {			// cursor locate and text display (1/2/3 params)
-		if (Func == digoleTP || Func == digoleTPTT)
-			iRV = digoleWriteINT("TP", 2, &vaList);
-		if (iRV > erFAILURE && (Func == digoleTT || Func == digoleTPTT))
-			iRV = digoleWriteText(va_arg(vaList, char *));
-
+	if (INRANGE(digoleTP, Func, digoleTPPF)) {			// cursor locate and text display/print (1/2/3/4+ params)
+		// step 1: cursor location if requested...
+		if (Func == digoleTP || Func == digoleTPTT || Func == digoleTPPF)	// TP or any combination?
+			iRV = digoleWriteINT("TP", 2, &vaList);							// handle the TP component
+		// Step 2: text message or formatted print ?
+		if (iRV > erFAILURE) {
+			char * pcTmp = va_arg(vaList, char *);		// TT/Text message or PF/Format string
+			if (INRANGE(digolePF, Func, digoleTPPF)) {	// PF & TPPF 
+				char caBuf[32];
+				vsnprintfx(caBuf, sizeof(caBuf), pcTmp, vaList);
+				pcTmp = caBuf;
+			}
+			iRV = digoleWriteText(pcTmp);
+		}
 	} else if (INRANGE(digoleBL, Func, digoleSF)) {		// backlight/cursor/font selection (1 param)
 		iRV = digoleWriteValue((Func == digoleBL) ? "BL" : (Func == digoleCS) ? "CS" : "SF", va_arg(vaList, int));
 
