@@ -126,7 +126,7 @@ int digoleFunction(digole_e Func, ...) {
 		digoleWriteLen("CL", 2);
 
 	} else if (Func == digoleCFG) {						// fixed multiple commands in 1
-		#define digoleCONFIG "CLCS\000SF\022BL\001"
+		#define digoleCONFIG "CS\000SF\022CL"			// "CLCS\000SF\022BL\001"
 		iRV = digoleWriteLen(digoleCONFIG, sizeof(digoleCONFIG)-1);
 	}
 	va_end(vaList);
