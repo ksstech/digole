@@ -27,12 +27,23 @@ digole_t sDigole = { 0 };
 
 // ####################################### Local functions #########################################
 
+/**
+ * @brief	Write data from buffer to the Digole display
+ * @param[in]	pccStr pointer to the data buffer
+ * @param[in]	Len size of data in buffer to be sent
+ * @return	result from the I2C transaction
+ */
 static int digoleWriteLen(const char * pccStr, int Len) {
 	return halI2C_Queue(sDigole.psI2C, i2cW, (u8_t *)pccStr, Len, (u8_t *) NULL, 0, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 }
 
 static int digoleWrite(const char * pccStr) { return digoleWriteLen(pccStr, strlen(pccStr)); }
 
+/**
+ * @brief	Write a text string to the Digole display INCLUDING the terminating NUL
+ * @param[in]	pccStr pointer to the text string
+ * @return	result from the I2C transaction
+ */
 static int digoleWriteText(const char * pccStr) {
 	int iRV = digoleWriteLen("TT", 2);
 	if (iRV > erFAILURE)
@@ -40,6 +51,12 @@ static int digoleWriteText(const char * pccStr) {
 	return iRV;
 }
 
+/**
+ * @brief	Encode a value, format as required by Digole display, into a buffer 
+ * @param[in]	pcBuf to be used for storage of encoded value
+ * @param[in]	Val value to be encoded
+ * @return	number of characters stored
+ */
 static int digoleStoreValue(char * pcBuf, int Val) {
 	int iRV = 0;
 	if (Val > 255) {
@@ -59,6 +76,13 @@ static int digoleWriteValue(const char * pccStr, int Value) {
 	return digoleWriteLen(caBuf, pTmp - caBuf);
 }
 
+/**
+ * @brief	Encode number of "int" values and Write them following the a text string to the Digole display
+ * @param[in]	pccStr pointer to the text string
+ * @param[in]	Count number of "int" values to be encoded
+ * @param[in]	pvaList pointer to va_list structure with int variables
+ * @return	result from the I2C transaction
+ */
 static int digoleWriteINT(const char * pccStr, int Count, va_list * pvaList) {
 	char caBuf[16];
 	char * pTmp;
