@@ -37,8 +37,6 @@ static int digoleWriteLen(const char * pccStr, int Len) {
 	return halI2C_Queue(sDigole.psI2C, i2cW, (u8_t *)pccStr, Len, (u8_t *) NULL, 0, (i2cq_p1_t) NULL, (i2cq_p2_t) NULL);
 }
 
-static int digoleWrite(const char * pccStr) { return digoleWriteLen(pccStr, strlen(pccStr)); }
-
 /**
  * @brief	Write a text string to the Digole display INCLUDING the terminating NUL
  * @param[in]	pccStr pointer to the text string
@@ -66,14 +64,6 @@ static int digoleStoreValue(char * pcBuf, int Val) {
 	}
 	*pcBuf++ = Val;
 	return ++iRV;
-}
-
-static int digoleWriteValue(const char * pccStr, int Value) {
-	char caBuf[16];
-	char * pTmp = stpcpy(caBuf, pccStr);				// store command string
-	pTmp += digoleStoreValue(pTmp, Value);				// store value
-	IF_myASSERT(debugTRACK, (pTmp - caBuf) < sizeof(caBuf));
-	return digoleWriteLen(caBuf, pTmp - caBuf);
 }
 
 /**
@@ -130,10 +120,10 @@ int digoleFunction(digole_e Func, ...) {
 			iRV = digoleWriteText(pcTmp);
 		}
 	} else if (INRANGE(digoleBL, Func, digoleSF)) {		// backlight/cursor/font selection (1 param)
-		iRV = digoleWriteValue((Func == digoleBL) ? "BL" : (Func == digoleCS) ? "CS" : "SF", va_arg(vaList, int));
+		iRV = digoleWriteINT((Func == digoleBL) ? "BL" : (Func == digoleCS) ? "CS" : "SF", 1, &vaList);
 
 	} else if (Func == digoleCLR) {						// clear screen (0 param)
-		digoleWrite("CL");
+		digoleWriteLen("CL", 2);
 
 	} else if (Func == digoleCFG) {						// fixed multiple commands in 1
 		#define digoleCONFIG "CLCS\000SF\022BL\001"
