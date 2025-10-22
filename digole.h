@@ -11,6 +11,29 @@ extern "C" {
 
 // ########################################### Macros ##############################################
 
+#define digoleCLEAR_SCREEN			"CL"
+
+#define digoleDISP_CONF_OFF			"DC\000"
+#define digoleDISP_CONF_ON			"DC\001"
+
+#define digoleDISP_START_OFF		"DSS\000"
+#define digoleDISP_START_ON			"DSS\001"
+
+#define digoleCURSOR_OFF			"CS\000"	
+#define digoleCURSOR_ON				"CS\001"
+
+#define digoleBACKLIGHT_OFF			"BL\000"	
+#define digoleBACKLIGHT_ON			"BL\001"
+
+#define digoleSELECT_FONT_18		"SF\022"
+
+#define digoleCONFIG0				digoleCURSOR_OFF digoleSELECT_FONT_18 digoleCLEAR_SCREEN
+#define digoleCONFIG1				digoleCURSOR_OFF digoleSELECT_FONT_18 digoleBACKLIGHT_ON digoleCLEAR_SCREEN
+#define digoleCONFIG2				digoleCURSOR_OFF digoleSELECT_FONT_18 digoleBACKLIGHT_OFF digoleCLEAR_SCREEN
+#define digoleCONFIG3				digoleCLEAR_SCREEN digoleDISPLAY_CONFIG
+
+#define digoleWRITE_CMD(c)			digoleWriteLen(c, sizeof(c)-1)
+
 // ######################################## Enumerations ###########################################
 
 typedef enum {

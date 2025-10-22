@@ -136,11 +136,12 @@ int digoleFunction(digole_e Func, ...) {
 		iRV = digoleWriteINT((Func == digoleBL) ? "BL" : (Func == digoleCS) ? "CS" : "SF", 1, &vaList);
 
 	} else if (Func == digoleCLR) {						// clear screen (0 param)
-		digoleWriteLen("CL", 2);
+//		iRV = digoleWriteLen(digoleCLEAR_SCREEN, sizeof(digoleCLEAR_SCREEN)-1);
+		iRV = digoleWRITE_CMD(digoleCLEAR_SCREEN);
 
 	} else if (Func == digoleCFG) {						// fixed multiple commands in 1
-		#define digoleCONFIG "CS\000SF\022CL"			// "CLCS\000SF\022BL\001"
-		iRV = digoleWriteLen(digoleCONFIG, sizeof(digoleCONFIG)-1);
+//		iRV = digoleWriteLen(digoleCONFIG0, sizeof(digoleCONFIG0)-1);
+		iRV = digoleWRITE_CMD(digoleCONFIG0);
 	} else {
 		// anything we don't understand....
 	}
