@@ -147,16 +147,15 @@ int digoleIdentify(i2c_di_t * psI2C) {
 
 int digoleConfig(i2c_di_t * psI2C) {
 	int iRV = erINV_STATE;
-	if (psI2C->IDok == 0)
-		goto exit;
-	psI2C->CFGok = 0;
-	halEventUpdateDevice(devMASK_DIGOLE, 0);
-	iRV = digoleSetup();
-	if (iRV < erSUCCESS)
-		goto exit;
-	psI2C->CFGok = 1;
-	halEventUpdateDevice(devMASK_DIGOLE, 1);
-exit:
+	if (psI2C->IDok) {
+		psI2C->CFGok = 0;
+		halEventUpdateDevice(devMASK_DIGOLE, 0);
+		iRV = digoleSetup();
+		if (iRV > erFAILURE) {
+			psI2C->CFGok = 1;
+			halEventUpdateDevice(devMASK_DIGOLE, 1);
+		}
+	}
 	return iRV;
 }
 
